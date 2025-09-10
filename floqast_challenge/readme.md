@@ -11,3 +11,8 @@ step 2: Get all records in MondoDB greater than lastest pull date (truncated by 
 Step 3: write to S3 with Iceberg formatting. Use incremental updates with Iceberg Merge INTO CDC
 
 Step 4: Optimize S3 files with partitions and enable compaction, enable snapshots
+
+
+https://blog.min.io/a-developers-introduction-to-apache-iceberg-using-minio/
+
+https://www.bmc.com/blogs/mongodb-docker-container/
