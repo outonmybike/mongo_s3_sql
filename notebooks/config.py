@@ -65,4 +65,5 @@ def table_gen_sql(database, table_name, table_cols, partition_col):
     col_text = ''
     sql = f'create or replace table {database}.{table_name} ({col_text}) USING iceberg {partition_txt}'
     print('table created')
+    print('testing cache')
     return sql
