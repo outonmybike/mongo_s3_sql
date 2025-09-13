@@ -2,34 +2,18 @@ from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
 
+env = 'vsc' if __name__ == '__main__' else 'nb'
+
 def main():
-    print('starting')
-    try:
-        client = MongoClient('mongodb://admin:password@localhost:27017/admin')
-        # client = MongoClient('localhost:27017')
-        # client = MongoClient(
-        #     'localhost:27017',
-        #     username='admin',
-        #     password='password',
-        #     authSource='admin' # The database where the user is defined
-        # )
-        # print(client.list_database_names())
-        # client.admin.command('ismaster')
-        print("Connection to MongoDB successful!")
-        mydb = client['accounting_db']
-        mycollection = mydb["humans"]
-        mycollection.insert_one({"name": "John Doe", "age": 30})
-
-        # # You can now interact with your database
-        # db = client.mydatabase
-        # collection = db.mycollection
-        # collection.insert_one({"message": "Hello from PyMongo!"})
-        # print("Data inserted successfully.")
-
-    except ConnectionFailure as e:
-        print(f"Could not connect to MongoDB: {e}")
-    finally:
-        if 'client' in locals() and client:
-            client.close()
-
-main()
+    print('new logic')
+    path = 'localhost:27017' if env == 'vsc' else 'mongo'
+    client = MongoClient(f'mongodb://root:example@{path}/admin')
+    print(client.list_database_names())
+    # client.admin.command('ismaster')
+    print("Connection to MongoDB successful!")
+    mydb = client['accounting_db']
+    mycollection = mydb["humans"]
+    mycollection.insert_one({"name": "Dan Doe", "age": 30})
+    print('data added')
+if __name__ == '__main__':
+    main()

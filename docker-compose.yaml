@@ -5,10 +5,11 @@ services:
     container_name: spark-iceberg
     build: spark/
     networks:
-      iceberg_net:
+      - iceberg_net
     depends_on:
       - rest
       - minio
+      - mongo
     volumes:
       - ./warehouse:/home/iceberg/warehouse
       - ./notebooks:/home/iceberg/notebooks/notebooks
@@ -26,7 +27,7 @@ services:
     image: tabulario/iceberg-rest
     container_name: iceberg-rest
     networks:
-      iceberg_net:
+      - iceberg_net
     ports:
       - 8181:8181
     environment:
@@ -58,7 +59,7 @@ services:
     image: minio/mc
     container_name: mc
     networks:
-      iceberg_net:
+      - iceberg_net
     environment:
       - AWS_ACCESS_KEY_ID=admin
       - AWS_SECRET_ACCESS_KEY=password
@@ -70,6 +71,38 @@ services:
       /usr/bin/mc mb minio/warehouse;
       /usr/bin/mc policy set public minio/warehouse;
       tail -f /dev/null
-      "      
+      "
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - iceberg_net
+
+  mongo-express:
+    image: mongo-express:latest
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: example
+      ME_CONFIG_MONGODB_URL: "mongodb://root:example@mongo:27017/"
+      ME_CONFIG_BASICAUTH: "False"
+    networks:
+      - iceberg_net
+
 networks:
   iceberg_net:
+    driver: bridge
+  
+volumes:
+  mongodb_data:
+    driver: local
