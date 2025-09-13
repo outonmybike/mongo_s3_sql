@@ -23,15 +23,25 @@ accounts_cols = [
     'account_id BIGINT',
     'name string',
     'type string',
-    'x_loaded_at timestamp'
+    'x_loaded_at timestamp',
 ]
 
 journal_entries_lines_cols = [
+    'line_id string',
     'entry_id string',
     'date date',
+    'account_id BIGINT',
+    'debit float',
+    'credit float',
+    'description string',
 ]
 
 close_tasks_cols = [
+    'task_id string',
+    'name string',
+    'assigned_to string',
+    'status string',
+    'due_date date',
 ]
 
 
@@ -62,8 +72,6 @@ table_list = [
 
 def table_gen_sql(database, table_name, table_cols, partition_col):
     partition_txt = '' if partition_col == '' else f"PARTITIONED BY ({partition_col})"
-    col_text = ''
+    col_text = ", ".join(table_cols)
     sql = f'create or replace table {database}.{table_name} ({col_text}) USING iceberg {partition_txt}'
-    print('table created')
-    print('testing cache')
     return sql

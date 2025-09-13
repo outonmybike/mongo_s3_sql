@@ -1,7 +1,6 @@
 import config
 
 def main():
-    print('hello')
 
     SPARK = config.generate_spark()
     TABLE_LIST = config.table_list
@@ -18,7 +17,8 @@ def main():
         partition_col = table['partition']
         table_sql = config.table_gen_sql(DATABASE,name,cols,partition_col)
         print(table_sql)
-        # SPARK.sql(table_sql)
+        SPARK.sql(table_sql)
+        print('table created')
 
 
     # # Insert sample data
